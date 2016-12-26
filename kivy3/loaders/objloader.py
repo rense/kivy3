@@ -29,7 +29,7 @@ Loaders for Wavefront format .obj files
 """
 
 import os
-from .loader import Loader
+from .loader import BaseLoader
 from kivy.core.image import Image
 from kivy3 import Object3D, Mesh, Material, Vector2
 from kivy3.core.geometry import Geometry
@@ -114,7 +114,7 @@ class WaveObject(object):
         return mesh
 
 
-class OBJLoader(Loader):
+class OBJLoader(BaseLoader):
 
     def __init__(self, **kw):
         super(OBJLoader, self).__init__(**kw)
@@ -123,7 +123,7 @@ class OBJLoader(Loader):
 
     def load_mtl(self):
         if not os.path.exists(self.mtl_source):
-            # skip loading material
+            #TODO show warning about materials file is not found
             return
         for line in open(self.mtl_source, "r"):
             if line.startswith('#'):
@@ -224,4 +224,3 @@ class OBJMTLLoader(OBJLoader):
         self.mtl_source = mtl_source
         self.load_mtl()
         return super(OBJMTLLoader, self).load(source, **kw)
-

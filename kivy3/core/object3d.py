@@ -50,7 +50,7 @@ class Object3D(EventDispatcher):
         self.children = list()
         self.parent = None
 
-        self.scale = Scale(1., 1., 1.)
+        self._scale = Scale(1., 1., 1.)
         self._position = Vector3(0, 0, 0)
         self._rotation = Vector3(0, 0, 0)
         self._position.set_change_cb(self.on_pos_changed)
@@ -105,6 +105,17 @@ class Object3D(EventDispatcher):
     rotation = AliasProperty(_get_rotation, _set_rotation)
     rot = rotation
 
+    def _set_scale(self, val):
+        if isinstance(val, Scale):
+            self._scale = val
+        else:
+            self._scale = Scale(*val)
+
+    def _get_scale(self):
+        return self._scale
+
+    scale = AliasProperty(_get_scale, _set_scale)
+
     def on_pos_changed(self, coord, v):
         """ Some coordinate was changed """
         self._translate.xyz = self._position
@@ -137,4 +148,3 @@ class Object3D(EventDispatcher):
     def get_children_instructions(self):
         for child in self.children:
             yield child.as_instructions()
-
